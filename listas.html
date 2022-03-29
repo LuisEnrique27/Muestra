@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+</head>
+<body>
+    <div class="container">
+    <form class="row g-3 needs-validation" novalidate id=selects-cascada>
+  
+    <h1>Vehículo</h1>
+        <hr>
+ 
+<label> MARCA:</label>
+<div class="col"></div>
+<select id=sel_marcas class="form-select" ></select>   
+    <label>SUBMARCA :</label>
+    <select id=sel_submarcas class="form-select" ></select>
+    <label> MÓDELO:</label>
+    <select id=sel_modelo class="form-select" ></select>
+    <label> DESCRIPCIÓN:</label>
+    <select id=sel_descripcion class="form-select" ></select>
+    <br>
+    <h1>Domicilio</h1>
+    <hr>
+<label> CÓDIGO POSTAL:</label>
+<input id="cp" class="form-control" >
+<label>ESTADO :</label>
+<input id="edo" class="form-control" disabled readonly>
+<label> MUNICIPIO:</label>
+<input id="mcip" class="form-control" disabled readonly>
+<label> COLONIA:</label>
+<input id="col" class="form-control" disabled readonly>
+<h1>Persona</h1>
+<hr>
+<label> FECHA NACIMIENTO:</label>
+<Input id="fecha" class="form-control" placeholder="dd/mm/aaaa" type="date" required>
+<label>Genero :</label>
+<select id=sel_gene class="form-select" ></select>
+
+
+<div class="col-12">
+    <button class="btn btn-primary" type="submit">Enviar</button>
+  </div>
+  </form>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+</body>
+</html>
+
+<script>
+
+$(function () {
+  'use strict'
+  var forms = document.querySelectorAll('.needs-validation')
+  Array.prototype.slice.call(forms)
+    .forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+        form.classList.add('was-validated')
+      }, false)
+    })
+});
+    //cargar marcas
+    var url = "https://apitestcotizamatico.azurewebsites.net/api/catalogos";
+    fetch(url,{
+        method:'POST',
+        body: JSON.stringify({
+            "NombreCatalogo":"Marca",
+            "Filtro":"",
+            "IdAplication":2
+        }),     
+
+        headers:{
+            "Content-type":"application/json"
+        }})
+    .then(function(result){
+if(result.ok){
+    return result.json();
+}
+  }).then(function(datos){
+      console.log(datos);
+     /* datos.forEach( function(element){
+    let comb_marcas= document.getElementById("sel_marcas");
+    let opt =document.createElement("option");
+    opt.appendChild(document.createTextNode(element.sDescripcion));
+    opt.value=data.iNumero;
+ comb_marcas.appendChild(opt);
+})*/
+    
+});
+    //cambio de marca
+$('#sel_marcas').change(function (){
+    $('#sel_submarcas').empty();
+    $('#sel_modelo').empty();
+    $('#sel_descripcion').empty();
+
+    fetch(url,{
+        method:'POST',
+        body: JSON.stringify({
+            "NombreCatalogo":"Submarca",
+            "Filtro":"",
+            "IdAplication":2
+        }),     
+
+        headers:{
+            "Content-type":"application/json"
+        }})
+    .then(function(result){
+if(result.ok){
+    return result.json();
+}
+  }).then(function(datos){
+      console.log(datos);
+     /* datos.forEach( function(element){
+    let comb_submarcas= document.getElementById("sel_submarcas");
+    let opt =document.createElement("option");
+    opt.appendChild(document.createTextNode(element.sDescripcion));
+    opt.value=data.iNumero;
+ comb_submarcas.appendChild(opt);
+})*/
+    
+});
+})
+
+    //cambio submarca
+$('#sel_submarcas').change(function (){
+    $('#sel_modelo').empty();
+    $('#sel_descripcion').empty();
+    
+    fetch(url,{
+        method:'POST',
+        body: JSON.stringify({
+            "NombreCatalogo":"modelo",
+            "Filtro":"",
+            "IdAplication":2
+        }),     
+
+        headers:{
+            "Content-type":"application/json"
+        }})
+    .then(function(result){
+if(result.ok){
+    return result.json();
+}
+  }).then(function(datos){
+      console.log(datos);
+     /* datos.forEach( function(element){
+    let comb_modelo= document.getElementById("sel_modelo");
+    let opt =document.createElement("option");
+    opt.appendChild(document.createTextNode(element.sDescripcion));
+    opt.value=data.iNumero;
+ comb_modelo.appendChild(opt);
+})*/
+    
+});
+})
+
+//cambio modelo
+$('#sel_modelo').change(function (){
+    $('#sel_descripcion').empty();
+    fetch(url,{
+        method:'POST',
+        body: JSON.stringify({
+            "NombreCatalogo":"descripcion",
+            "Filtro":"",
+            "IdAplication":2
+        }),     
+
+        headers:{
+            "Content-type":"application/json"
+        }})
+    .then(function(result){
+if(result.ok){
+    return result.json();
+}
+  }).then(function(datos){
+      console.log(datos);
+     /* datos.forEach( function(element){
+    let comb_descripcion= document.getElementById("sel_descripcion");
+    let opt =document.createElement("option");
+    opt.appendChild(document.createTextNode(element.sDescripcion));
+    opt.value=data.iNumero;
+ comb_descripcion.appendChild(opt);
+})*/
+    
+});
+    
+})
+
+//valida edad
+$('#selects-cascada').submit(function(e){
+   
+    e.preventDefault();
+   let edad=0;
+ let fechaing= new Date( document.getElementById("fecha").value);
+ 
+ let hoy = new Date();
+ edad= hoy.getFullYear()- fechaing.getFullYear();
+ var m = hoy.getMonth()-fechaing.getMonth();
+
+ if(m<0||(m===0&& hoy.getDate()<fechaing.getDate())){
+     edad--;
+ }
+ if(edad<=18){
+     alert('Eres menor de edad');   return false;
+ } 
+else{ 
+e.currentTarget.submit();
+}
+
+});
+    
+
+  
+</script>
